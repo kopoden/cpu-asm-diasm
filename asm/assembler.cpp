@@ -9,7 +9,9 @@ Command* CommandTableCreator () {
         return NULL;
 
     for (int i = 0; i < NUM_OF_COMMANDS; i++) {
+		
         CommandTable[i].Name = (char*) calloc (MAX_COMMAND_LENGTH, sizeof(char));
+        
         if (CommandTable[i].Name == NULL)
             return NULL;
     }
@@ -39,9 +41,9 @@ Command* CommandTableCreator () {
     return CommandTable;
 }
 //=================================================================
-Lable* LabelTableCreator () {
+Label* LabelTableCreator () {
 
-    Lable* LabelTable = (Lable*) calloc (MAX_NUM_OF_LABLES, sizeof(Lable));
+    Label* LabelTable = (Label*) calloc (MAX_NUM_OF_LABLES, sizeof(Label));
     if (LabelTable == NULL)
         return NULL;
 
@@ -51,7 +53,7 @@ Lable* LabelTableCreator () {
     return LabelTable;
 }
 //=================================================================
-int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable) {
+int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Label* LabelTable) {
 
     long int length_of_file = 0;
     
@@ -115,7 +117,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
 
             sscanf(line, "%s", cmd);
 
-            line = DeleteWord (line);
+            line = DeleteWord (&line);
 
             int CurCmd = 0;
             int match = NOPE;
@@ -172,7 +174,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
 
                         ASSERT_ARG(reg >= 0 && reg <= NUM_OF_RIGESTERS - 1);
 
-                        line = DeleteWord(line);
+                        line = DeleteWord(&line);
 
                         ASSERT_SYNTAX(sscanf(line, "%lg", &num) != -1);
 
@@ -192,6 +194,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
     }
 //Second
     double adress1 = (double) adress;
+    
     fwrite(&adress1, sizeof(double), 1, Asm);
 
     for (int LineNum = 0; LineNum < num_of_lines; LineNum++) {
@@ -205,7 +208,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
 
             sscanf(line, "%s", cmd);
 
-            line = DeleteWord(line);
+            line = DeleteWord(&line);
 
             int CurCmd = 0;
 
@@ -215,6 +218,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
                     if (CurCmd == PUSH) {
 
                         int reg = -1;
+                        
                         double value = 0;
 
                         if (sscanf(line, "%lg", &value) != 0) {
@@ -222,7 +226,9 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
                             double CurCmd1 = (double) PUSH_DOUBLE;
 
                             fwrite(&CurCmd1, sizeof(double), 1, Asm);
+                            
                             fwrite(&value, sizeof(double), 1, Asm);
+                            
                             continue;
                         }
 
@@ -289,7 +295,7 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
 
                         sscanf(line, "reg%d", &reg);
 
-                        line = DeleteWord(line);
+                        line = DeleteWord(&line);
 
                         sscanf(line, "%lg", &num);
 
@@ -313,7 +319,19 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Lable* LabelTable)
 
         }
     }
-
+	
+	free(line);
+	line = NULL;
+	
+	free(cmd);
+	cmd = NULL;
+	
+	free(buffer);
+	buffer = NULL;
+	
+	free(text);
+	text = NULL;
+	
     return OK;
 }
 //=================================================================
@@ -324,11 +342,16 @@ int divide_into_lines (char* buf, int length, char** text) {
     text[0] = buf;
 
     for (int i = 0; i < length; i++) {
+		
         if ((i < 0) && (i >= length))
             return ACCSS_ERR;
+            
         if (buf[i] == '\n') {
+			
             line++;
+            
             buf[i] = 0;
+            
             if  (i + 1 < length) {
                 text[line] = &buf[i + 1];
             }
@@ -361,21 +384,35 @@ int check_empty (char* str) {
     return res;
 }
 //=================================================================
-char* DeleteWord(char* str) {
+char* DeleteWord(char** str) {
+	
     int i = 0;
-    while (str[i] == ' ' && i < MAX_COMMAND_LENGTH) i++;
-    while (str[i] != ' ' && i < MAX_COMMAND_LENGTH) {
-        str[i] = ' ';
+    
+    while ((*str)[i] == ' ' && i < MAX_COMMAND_LENGTH) i++;
+    
+    while ((*str)[i] != ' ' && i < MAX_COMMAND_LENGTH) {
+		
+        
+        (*str)[i] = ' ';
         i++;
+        
     }
-    while (str[i] == ' ' && i < MAX_COMMAND_LENGTH) i++;
+    while ((*str)[i] == ' ' && i < MAX_COMMAND_LENGTH) i++;
 
     char* buf = (char*) calloc (MAX_COMMAND_LENGTH, sizeof(char));
+    
     int start = i;
-    while (str[i] != 0 && i < MAX_COMMAND_LENGTH) {
-        buf[i-start] = str[i];
+    
+    while ((*str)[i] != 0 && i < MAX_COMMAND_LENGTH) {
+		
+        buf[i - start] = (*str)[i];
+        
         i++;
+        
     }
+    
+    free(*str);
+    
     return buf;
 }
 //=================================================================

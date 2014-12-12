@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-c -Wall
-HEADERS=assembler.h
-SOURCES=main.cpp assembler.cpp
+HEADERS=cpu.h stack_functions.h
+SOURCES=main.cpp cpu.cpp stack_functions.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=asm
+EXECUTABLE=cpu
 
 all: $(HEADERS) $(SOURCES) $(EXECUTABLE)
 

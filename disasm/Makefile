@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-c -Wall
-HEADERS=assembler.h
-SOURCES=main.cpp assembler.cpp
+HEADERS=disassembler.h
+SOURCES=main.cpp disassembler.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=asm
+EXECUTABLE=disasm
 
 all: $(HEADERS) $(SOURCES) $(EXECUTABLE)
 

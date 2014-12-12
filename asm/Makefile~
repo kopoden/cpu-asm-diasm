@@ -11,5 +11,5 @@ MakeObjects: $(HEADERS) $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES)
 
 $(EXECUTABLE): $(OBJECTS) MakeObjects
-	$(CC) $(OBJECTS) -o $(EXECUTABLE)
+	$(CC) $(OBJECTS) -o asm
    
