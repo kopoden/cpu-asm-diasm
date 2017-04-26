@@ -8,14 +8,6 @@ int CommandTableCreator (Command** CommandTable) {
     if (*CommandTable == NULL)
         return ERR_MEM;
 
-    for (int i = 0; i < NUM_OF_COMMANDS; i++) {
-
-        (*CommandTable)[i].Name = (char*) calloc (MAX_COMMAND_LENGTH, sizeof(char));
-
-        if ((*CommandTable)[i].Name == NULL)
-            return ERR_MEM;
-    }
-
     (*CommandTable)[0].Name = "push";    (*CommandTable)[0].Arg = 2;
     (*CommandTable)[1].Name = "pop";     (*CommandTable)[1].Arg = 2;
     (*CommandTable)[2].Name = "add";     (*CommandTable)[2].Arg = 1;
@@ -41,8 +33,19 @@ int CommandTableCreator (Command** CommandTable) {
     return OK;
 }
 //============================================================================
-int disassembly (FILE* BinFile, FILE* Asm, Command* CmdTable) {
-
+int add_label (int address) {
+	
+	
+	
+	return OK;
+}
+//============================================================================
+int disassembly (FILE* BinFile, FILE* Asm) {
+	
+	Command* CmdTable = NULL;
+	
+	CommandTableCreator(&CmdTable);
+	
     if (CmdTable == NULL)
         return ERR_MEM;
 
@@ -57,8 +60,11 @@ int disassembly (FILE* BinFile, FILE* Asm, Command* CmdTable) {
     int max_counter = (int) Size;
 
     double Cmd = -1;
+    
     double Arg = 0;
+    
     double Arg2 = 0;
+    
     int i = 0;
 
     while (i < max_counter) {
@@ -120,6 +126,8 @@ int disassembly (FILE* BinFile, FILE* Asm, Command* CmdTable) {
 
         }
     }
-
+	
+	free(CmdTable);
+	
     return OK;
 }

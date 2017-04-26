@@ -28,10 +28,9 @@ enum CPU_ERRORS {
 const int MAX_NUM_OF_REGISTERS = 32;
 const int STACK_SIZE = 10000;
 const int ADDRESS_STACK_SIZE = 1000;
-const char AVAILABLE_FILE_FORMAT[4] = "bin";
 
 enum commands {
-    PUSH,
+    PUSH = 0,
     POP,
     ADD,
     SUB,
@@ -51,7 +50,8 @@ enum commands {
     MOV,
     IN,
     SQRT,
-    PUSH_DOUBLE
+    PUSH_DOUBLE,
+    MAX_NUM_OF_COMMAND
 };
 
 typedef struct {

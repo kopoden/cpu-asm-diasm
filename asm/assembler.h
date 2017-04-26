@@ -10,7 +10,6 @@
     do {                                                            \
         if ( ! ( cond ) ) {                                         \
             printf ("SYNTAX ERROR ( line %d )\n", LineNum + 1);    \
-            system("pause");                                        \
             return SNTX_ERR;                                        \
         }                                                           \
     } while (0);                                                    \
@@ -19,7 +18,6 @@
     do {                                                            \
         if ( ! ( cond ) ) {                                         \
             printf ("IVALID ARGUMENT ( line %d )\n", LineNum + 1); \
-            system("pause");                                        \
             return INV_ARG;                                         \
         }                                                           \
     } while (0);                                                    \
@@ -28,7 +26,6 @@
     do {                                                                    \
         if ( ! ( cond ) ) {                                                 \
             printf ("LABEL IS ALREADY IN USE ( line %d )\n", LineNum + 1); \
-            system("pause");                                                \
             return LABEL_ERR;                                               \
         }                                                                   \
     } while (0);                                                            \
@@ -37,7 +34,6 @@
     do {                                                                    \
         if ( ! ( cond ) ) {                                                 \
             printf ("LABEL IS UNKNOWN ( line %d )\n", LineNum + 1);        \
-            system("pause");                                                \
             return LABEL_ERR;                                               \
         }                                                                   \
     } while (0);                                                            \
@@ -48,7 +44,6 @@
             printf ("MEMORY ALLOCATION ERROR\n( %s ) IN %s, %s ( %d )\n",  \
             #cond, __PRETTY_FUNCTION__,                                     \
             __FILE__, __LINE__ );                                           \
-            system("pause");                                                \
             return ERR_MEM;                                                 \
         }                                                                   \
     } while (0);                                                            \
@@ -59,18 +54,17 @@
             printf ("ACCESS ERROR\n( %s ) IN %s, %s ( %d )\n",             \
             #cond, __PRETTY_FUNCTION__,                                     \
             __FILE__, __LINE__ );                                           \
-            system("pause");                                                \
             return ACCSS_ERR;                                               \
         }                                                                   \
     } while (0);                                                            \
 //===========================================================================
 
-//==========CONSTANTS=====================================================
-const int MAX_COMMAND_LENGTH = 100;
-const int NUM_OF_COMMANDS = 21;
-const int MAX_NUM_OF_LABLES = 1000;
-const int NUM_OF_RIGESTERS = 32;
-
+//==========CONSTANTS========================================================
+#define MAX_COMMAND_LENGTH 100
+#define NUM_OF_COMMANDS 21
+#define MAX_NUM_OF_LABLES 1000
+#define NUM_OF_RIGESTERS 32
+//===========================================================================
 enum constants {
     OK,
     NOPE,
@@ -129,7 +123,7 @@ int divide_into_lines(char* buf, int length, char** text);
 //=====================================================================
 int count_lines(const char* buf, int length);
 //=====================================================================
-int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Label* LabelTable);
+int Assemble (FILE* Source, FILE* Asm);
 //=====================================================================
 
 #endif // _ASSEMBLER_H_INCL_

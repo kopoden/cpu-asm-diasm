@@ -105,6 +105,13 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
+    if ( argc != 2 )
+    {
+        printf("INCORRECT FORMAT\n");
+        fprintf(logs, "INCORRECT FORMAT\n");
+    }
+
+
     if (argv[1] == NULL) {
 
         printf("INPUT BINARY FILE\n");

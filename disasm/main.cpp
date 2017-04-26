@@ -1,57 +1,10 @@
 #include "disassembler.h"
 
-#define check( err_number )                                                 \
-    do {                                                                    \
-        switch (err_number) {                                               \
-                                                                            \
-            case OK:                                                        \
-                break;                                                      \
-                                                                            \
-            case ERR_MEM:                                                   \
-                                                                            \
-                printf("NOT ENOUGH MEMORY TO ALLOCATE\n");                  \
-                system("pause");                                            \
-                return ERR_MEM;                                             \
-                                                                            \
-            case ADDRESS_ERR:                                               \
-                                                                            \
-                printf("INVALID ADDRESS\n");                                \
-                system("pause");                                            \
-                return ADDRESS_ERR;                                         \
-                                                                            \
-            case INV_INPUT_FILE:                                            \
-                                                                            \
-                printf("INCOMPATIBLE OR EMPTY INPUT FILE\n");               \
-                system("pause");                                            \
-                return INV_INPUT_FILE;                                      \
-                                                                            \
-            case READ_FILE_ERR:                                             \
-                                                                            \
-                printf("READING FILE ERROR\n");                             \
-                system("pause");                                            \
-                return READ_FILE_ERR;                                       \
-                                                                            \
-            case UNKNOWN_CMD:                                               \
-                                                                            \
-                printf("UNKNOWN COMMAND\n");                                \
-                system("pause");                                            \
-                return UNKNOWN_CMD;                                         \
-                                                                            \
-            default:                                                        \
-                                                                            \
-                printf("UNKNOWN ERROR\n");                                  \
-                system("pause");                                            \
-                return UNKNOWN_ERR;                                         \
-        }                                                                   \
-    } while(0);                                                             \
-
 int main(int argc, char* argv[]) {
 
     if (argv[1] == NULL) {
 
         printf("PLEASE, INPUT BINARY FILE\n");
-
-        system("pause");
 
         return READ_FILE_ERR;
     }
@@ -62,21 +15,34 @@ int main(int argc, char* argv[]) {
 
         printf("FILE READING ERROR\n");
 
-        system("pause");
-
         return READ_FILE_ERR;
     }
+	
+	char* point = argv[1];
+    
+    while (*point != '.') point++;
 
-    FILE* Asm = fopen("res.asm", "w");
+    if 	(strcmp(point, ".bin") != 0) { 
+		
+        printf("INVALID INPUT FILE FORMAT\n");
+        
+        return INV_INPUT_FILE;
+    }
+    
+    strcpy(point, ".asm");
+	
+    FILE* Asm = fopen(argv[1], "w");
+    
+    if (Asm == NULL) {
+		
+		printf("CAN'T CREATE FILE WITH DISASSEBLIED CODE\n");
+		
+		return 0;
+	}
 
-    Command* CommandTable = NULL;
-
-    check(CommandTableCreator(&CommandTable));
-
-    check(disassembly(Bin, Asm, CommandTable));
+    check(disassembly(Bin, Asm));
 
     printf("SUCCESS!\n");
-    system("pause");
 
     fclose(Bin);
     fclose(Asm);

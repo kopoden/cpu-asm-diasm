@@ -8,14 +8,6 @@ Command* CommandTableCreator () {
     if (CommandTable == NULL)
         return NULL;
 
-    for (int i = 0; i < NUM_OF_COMMANDS; i++) {
-		
-        CommandTable[i].Name = (char*) calloc (MAX_COMMAND_LENGTH, sizeof(char));
-        
-        if (CommandTable[i].Name == NULL)
-            return NULL;
-    }
-
     CommandTable[0].Name = "push";    CommandTable[0].Arg = 2;
     CommandTable[1].Name = "pop";     CommandTable[1].Arg = 2;
     CommandTable[2].Name = "add";     CommandTable[2].Arg = 1;
@@ -53,7 +45,7 @@ Label* LabelTableCreator () {
     return LabelTable;
 }
 //=================================================================
-int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Label* LabelTable) {
+int Assemble (FILE* Source, FILE* Asm) {
 
     long int length_of_file = 0;
     
@@ -61,7 +53,11 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Label* LabelTable)
 	
 	length_of_file = ftell(Source); 
  
-	fseek (Source, 0, SEEK_SET);  
+	fseek (Source, 0, SEEK_SET);
+	
+	Label* LabelTable = LabelTableCreator();
+	
+	Command* CommandTable = CommandTableCreator();
 
     char* buffer = (char*) calloc (length_of_file + 1, sizeof(*buffer));
 
@@ -332,6 +328,12 @@ int Assemble (FILE* Source, FILE* Asm, Command* CommandTable, Label* LabelTable)
 	free(text);
 	text = NULL;
 	
+	free(LabelTable);
+	LabelTable = NULL;
+	
+	free(CommandTable);
+	CommandTable = NULL;
+	
     return OK;
 }
 //=================================================================
@@ -365,8 +367,10 @@ int count_lines (const char* buf, int length) {
     int am_of_lines = 0;
 
     for (int i = 0; i < length; i++) {
+		
         if (buf[i] == '\n')
             am_of_lines++;
+            
     }
 
     return am_of_lines;
@@ -391,7 +395,6 @@ char* DeleteWord(char** str) {
     while ((*str)[i] == ' ' && i < MAX_COMMAND_LENGTH) i++;
     
     while ((*str)[i] != ' ' && i < MAX_COMMAND_LENGTH) {
-		
         
         (*str)[i] = ' ';
         i++;
